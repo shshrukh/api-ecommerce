@@ -1,8 +1,8 @@
 import { Schema, model } from "mongoose";
 import { USER_ROLES } from "../constants/user.constants";
-import { IUser } from "../interfaces/user.interface";
+import { IUser } from "../modules/user/user.interface";
 import bcrypt from "bcryptjs";
-import { IUserDocument } from "../interfaces/user.interface"; 
+import { IUserDocument } from "../modules/user/user.interface";
 
 
 const userSchema = new Schema<IUser>({
@@ -37,57 +37,50 @@ const userSchema = new Schema<IUser>({
         },
         default: null
     },
-    contactNumber: {
-        type: String,
-        trim: true,
-        required: true
-    },
     role: {
         type: String,
         enum: Object.values(USER_ROLES),
         default: USER_ROLES.USER
     },
-    refreshToken: [
-        {
-            token: {
-                type: String,
-                default: null,
-                select: false
-            },
-            createdAt: {
-                type: Date,
-                default: Date.now
-            }
-        }
-    ],
-    verificationToken: {
-        type: String,
-        default: null
+    isVerified:{
+        type: Boolean,
+        default: false
     },
-    verificationTokenExp: {
-        type: Date,
-        default: null
+    contactNumber: {
+        type: String,
+        trim: true,
+        required: true,
+        validate: {
+            validator: function (v: string) {
+                return /^\+923\d{9}$/.test(v);
+            },
+            message: "Contact number must start with +923 and contain 9 digits after it"
+        }
     },
     address: [
         {
-            city: { type: String, required: true, trim: true },
-            country: { type: String, required: true, trim: true },
-            zip: { type: Number, required: true, trim: true }
+            city: { type: String, required: true, trim: true , lowercase: true},
+            country: { type: String, required: true, trim: true , lowercase: true},
+            zip: { type: Number, required: true}
+
         }
     ]
 
 }, { timestamps: true });
 
-userSchema.pre("save", async function(this: IUserDocument){
-    if(!this.isModified("password")) return;
-    const hashPassword = await bcrypt.hash(this.password, 10);
-    this.password = hashPassword;
+userSchema.pre("save", async function (this: IUserDocument) {
+    if (!this.isModified("password")) return;
+    if (this.password) {
+        const hashPassword = await bcrypt.hash(this.password, 10);
+        this.password = hashPassword;
+    }
 });
 
-userSchema.methods.comparePassword = async function(password: string): Promise<boolean>{
+userSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
+    if (!this.password) return false;
     const comparePassword = await bcrypt.compare(password, this.password);
     return comparePassword;
 }
-
+//hello
 
 export const User = model<IUser>("User", userSchema);
