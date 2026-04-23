@@ -1,22 +1,20 @@
 import { User } from "../../models/user.model";
-import { RegisterUser } from "../../interfaces/user.interface";
+import { RegisterUser } from "./user.interface";
 import { ApiError } from "../../utils/ApiError";
 
-const registerUserService = async (payload: RegisterUser)=>{
-    const { name, email, contactNumber, password, address, } = payload;
-    const existingUser = await User.findOne({email});
+const registerUserService = async (payload: RegisterUser) => {
+    const { name, email, password, address, contactNumber } = payload;
+    const user = await User.findOne({ email });
+    if (user) {
+        throw new ApiError(409, "User allredy exists");
+    };
+    const createUser = await User.create({ name, email, password, contactNumber, address });
 
-    if(existingUser){
-        throw new ApiError(400, "user all ready exist with this email");
-    }
+    const safeUser = createUser.toObject();
+    delete safeUser.password;
+    return safeUser
 
-    const user = await User.create({name, email, contactNumber, password, address: [address]});
-    return {
-        id: user._id,
-        name: user.name,
-        email: user.email
-    }
 }
 
 
-export {registerUserService}
+export { registerUserService }
