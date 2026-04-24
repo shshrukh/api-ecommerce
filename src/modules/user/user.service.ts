@@ -9,7 +9,6 @@ const registerUserService = async (payload: RegisterUser) => {
         throw new ApiError(409, "User allredy exists");
     };
     const createUser = await User.create({ name, email, password, contactNumber, address });
-
     const safeUser = createUser.toObject();
     delete safeUser.password;
     return safeUser
