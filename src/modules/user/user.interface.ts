@@ -24,7 +24,7 @@ export interface IUser {
     contactNumber: string;
     isVerified: boolean;
     role: UserRole;
-    address: IAddress[];
+    address: IAddress;
 
 }
 
@@ -35,7 +35,7 @@ export interface RegisterUser {
     name: string,
     email: string,
     password: string, 
-    address: IAddress[],
+    address: IAddress,
     contactNumber: string
 }
 

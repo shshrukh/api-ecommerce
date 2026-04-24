@@ -42,7 +42,7 @@ const userSchema = new Schema<IUser>({
         enum: Object.values(USER_ROLES),
         default: USER_ROLES.USER
     },
-    isVerified:{
+    isVerified: {
         type: Boolean,
         default: false
     },
@@ -57,14 +57,12 @@ const userSchema = new Schema<IUser>({
             message: "Contact number must start with +923 and contain 9 digits after it"
         }
     },
-    address: [
-        {
-            city: { type: String, required: true, trim: true , lowercase: true},
-            country: { type: String, required: true, trim: true , lowercase: true},
-            zip: { type: Number, required: true}
+    address:{
+        city: { type: String, required: true, trim: true, lowercase: true },
+        country: { type: String, required: true, trim: true, lowercase: true },
+        zip: { type: Number, required: true }
 
-        }
-    ]
+    }
 
 }, { timestamps: true });
 

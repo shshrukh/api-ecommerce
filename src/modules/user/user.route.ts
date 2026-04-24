@@ -6,7 +6,7 @@ import { registerUserSchema } from "./user.validater";
 const userRouter = Router();
 
 
-userRouter.route("/checking").post(schemaValidation(registerUserSchema),register);
+userRouter.route("/register").post(schemaValidation(registerUserSchema),register);
 
 
 export {userRouter}
