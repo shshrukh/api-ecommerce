@@ -31,6 +31,9 @@ export interface IUser {
 export interface IUserMethods {
     comparePassword(password: string): Promise<boolean>;
 }
+export type IUserDocument = Document & IUser & IUserMethods;
+
+
 export interface RegisterUser {
     name: string,
     email: string,
@@ -41,7 +44,6 @@ export interface RegisterUser {
 
 
 
-export interface IUserDocument extends IUser, IUserMethods, Document {};
 
 
 export interface IRefreshToken {
