@@ -1,15 +1,15 @@
-import mongoose, {Schema, model} from "mongoose";
-import { IRefreshToken } from "../modules/user/user.interface";
-import bcrypt from "bcrypt";
+import  {Schema, model} from "mongoose";
+import { IRefreshTokenDocument } from "../modules/user/user.interface";
 
 
-const refreshSchema = new Schema<IRefreshToken>({
+
+const refreshSchema = new Schema<IRefreshTokenDocument>({
     userId: {
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true
     },
-    tokenHash: {
+    hashedToken: {
         type: String,
         required: true,
         select: false
@@ -18,12 +18,16 @@ const refreshSchema = new Schema<IRefreshToken>({
         type: Date,
         required: true
     },
-    deviceInfo: String,
-    ipAddress: String
+    deviceInfo: {
+        type: String
+    },
+    ipAddress: {
+        type: String
+    }
 }, { timestamps: true });
 
-refreshSchema.index({ userId: 1 });
-refreshSchema.index({ tokenHash: 1 });
+
+refreshSchema.index({ userId: 1 ,hashedToken: 1 });
 refreshSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-export const Token = model<IRefreshToken>("Token", refreshSchema);
+export const Token = model<IRefreshTokenDocument>("Token", refreshSchema);

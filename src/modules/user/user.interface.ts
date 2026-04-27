@@ -1,14 +1,16 @@
 import { UserRole } from "../../constants/user.constants";
 import mongoose, { Document } from "mongoose";
-import {z} from "zod";
+import { z } from "zod";
 import { registerUserSchema } from "./user.validater";
 
+/* =========================
+   USER TYPES
+========================= */
 
 export interface IAvatar {
-    url: string,
-    public_id: string
+    url: string;
+    public_id: string;
 }
-
 
 export interface IAddress {
     city: string;
@@ -25,34 +27,51 @@ export interface IUser {
     isVerified: boolean;
     role: UserRole;
     address: IAddress;
-
 }
+
+/* =========================
+   USER DOCUMENT (MONGOOSE)
+========================= */
 
 export interface IUserMethods {
     comparePassword(password: string): Promise<boolean>;
 }
-export type IUserDocument = Document & IUser & IUserMethods;
 
+export type IUserDocument = IUser & IUserMethods & Document;
+
+/* =========================
+   REGISTER USER TYPE
+========================= */
 
 export interface RegisterUser {
-    name: string,
-    email: string,
-    password: string, 
-    address: IAddress,
-    contactNumber: string
+    name: string;
+    email: string;
+    password: string;
+    address: IAddress;
+    contactNumber: string;
 }
 
-
-
-
+/* =========================
+   REFRESH TOKEN TYPE
+========================= */
 
 export interface IRefreshToken {
     userId: mongoose.Types.ObjectId;
-    tokenHash: string;
+    hashedToken: string;
     expiresAt: Date;
-    createdAt: Date;
     deviceInfo?: string;
-    ipAddress?: string 
+    ipAddress?: string;
 }
+
+/* IMPORTANT:
+   ❌ removed createdAt
+   because timestamps: true already provides it
+*/
+
+export type IRefreshTokenDocument = IRefreshToken & Document;
+
+/* =========================
+   ZOD TYPE
+========================= */
 
 export type RegUser = z.infer<typeof registerUserSchema>;

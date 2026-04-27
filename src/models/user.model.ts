@@ -1,11 +1,10 @@
 import { Schema, model } from "mongoose";
 import { USER_ROLES } from "../constants/user.constants";
-import { IUser } from "../modules/user/user.interface";
 import bcrypt from "bcryptjs";
 import { IUserDocument } from "../modules/user/user.interface";
 
 
-const userSchema = new Schema<IUser, {}, IUserDocument>({
+const userSchema = new Schema<IUserDocument>({
     name: {
         type: String,
         required: true,
@@ -81,4 +80,4 @@ userSchema.methods.comparePassword = async function (password: string): Promise<
 }
 //hello
 
-export const User = model<IUser>("User", userSchema);
+export const User = model<IUserDocument>("User", userSchema);
