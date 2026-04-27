@@ -6,23 +6,19 @@ import { LoginUser as loginInterfase} from "./auth.interface";
 
 const loginUser = async(payload: loginInterfase)=> {
     const{email, password} = payload
-    const existingUser: IUserDocument| null= await User.findOne({email});
-    if(!existingUser){
-        throw new ApiError(400,"user not exists with this credentials");
+    const user: IUserDocument| null= await User.findOne({email}).select("name +password");
+    if(!user){
+        throw new ApiError(404,"user not found");
     }   
     
-    // comparing the password
-    const hashpassword = existingUser.password;
-    if(!hashpassword){
-        throw new ApiError(400, "i know its my mistake for while let it" )
-    }
-    const isPasswordCorrect = await existingUser.comparePassword(password);
+    const isPasswordCorrect = await user.comparePassword(password);
 
     if(!isPasswordCorrect){
-        throw new ApiError(400, "Invalid credintials");
+        throw new ApiError(401, "Invalid credentials");
     }
-
-    const data = "login successfully";
+    console.log(user);
+    
+    return `${user.name} login successfully`
     
 
 };
