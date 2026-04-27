@@ -4,16 +4,30 @@ import { LogUser } from "./auth.interface";
 import { loginUser } from "./auth.service";
 
 
-const login = AsyncHandler(async(req: Request<{},{}, LogUser>, res: Response)=> {
-    const data: LogUser= req.body;
+const login = AsyncHandler(async (req: Request<{}, {}, LogUser>, res: Response) => {
+    
+    const data: LogUser = req.body;
     const result = await loginUser(data);
-    res.status(201).json({
+    const { user, accessToken, refreshToken } = result;
+
+    res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    res.status(200).json({
         success: true,
-        message: result
-    })
+        message: "Login successful",
+        data: {
+            user,
+            accessToken
+        }
+    });
 
 });
 
 
 
-export{ login};
+export { login };
