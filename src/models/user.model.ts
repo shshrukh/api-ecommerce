@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { IUserDocument } from "../modules/user/user.interface";
 
 
-const userSchema = new Schema<IUser>({
+const userSchema = new Schema<IUser, {}, IUserDocument>({
     name: {
         type: String,
         required: true,
