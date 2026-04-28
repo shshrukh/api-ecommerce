@@ -2,7 +2,6 @@ import { UserRole } from "../../constants/user.constants";
 import mongoose, { Document } from "mongoose";
 import { z } from "zod";
 import { registerUserSchema } from "./user.validater";
-
 /* =========================
    USER TYPES
 ========================= */
@@ -75,3 +74,4 @@ export type IRefreshTokenDocument = IRefreshToken & Document;
 ========================= */
 
 export type RegUser = z.infer<typeof registerUserSchema>;
+

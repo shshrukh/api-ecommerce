@@ -1,5 +1,6 @@
 import { User } from "../../models/user.model";
-import { RegisterUser } from "./user.interface";
+import { RegisterUser} from "./user.interface";
+import { reqUser } from "../../types/auth.types";
 import { ApiError } from "../../utils/ApiError";
 
 const registerUserService = async (payload: RegisterUser) => {
@@ -15,5 +16,26 @@ const registerUserService = async (payload: RegisterUser) => {
 
 }
 
+// get request user data;
+const getCurrentUserService = async (payload: reqUser) => {
 
-export { registerUserService }
+    const id = payload.user_id;
+
+    const user = await User.findById(id).select("name email avatar contactNumber address");
+
+    if (!user) {
+        throw new ApiError(404, `User with id:${id} not found`);
+    }
+
+    return {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        contactNumber: user.contactNumber,
+        address: user.address
+    }
+
+}
+
+export { registerUserService, getCurrentUserService }

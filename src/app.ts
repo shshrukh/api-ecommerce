@@ -13,8 +13,6 @@ app.use(cookieParser());
 
 app.use("/api/v1/user" ,userRouter );
 app.use("/api/v1/auth", authRouter);
-
-
-
+console.log("TS is loading types");
 // implementing the global middleware
 app.use(ErrorMiddleware);
