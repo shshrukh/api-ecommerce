@@ -6,12 +6,12 @@ import { UserRole } from "../constants/user.constants";
 import { AuthRequest } from "../types/auth.types";
 
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const userAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authReq = req as AuthRequest
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            throw new ApiError(401, "Unauthorized");
+            throw new ApiError( 401, "Unauthorized" );
         };
 
         const token: string = authHeader.split(" ")[1];
@@ -25,8 +25,8 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         const { user_id, role } = decode;
 
         authReq.user = {
-            user_id: user_id,
-            role: role
+            user_id,
+            role
         };
 
         next();
