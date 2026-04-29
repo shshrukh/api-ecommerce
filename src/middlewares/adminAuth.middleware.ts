@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AuthRequest } from "../types/auth.types";
+import { AuthRequest, reqUser } from "../types/auth.types";
 import { ApiError } from "../utils/ApiError";
 import jwt from "jsonwebtoken";
 import { CONSTANTS } from "../constants/env.constant";
@@ -28,7 +28,7 @@ export const adminAuthMiddleware = async ( req: Request, res: Response, next: Ne
 
         const { user_id, role } = decode;
 
-        const user = await User.findById( user_id );
+        const user = await User.findById( user_id ).select("role").lean();
 
         if( !user ){
             throw new ApiError( 404, "User not found");

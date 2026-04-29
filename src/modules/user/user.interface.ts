@@ -1,7 +1,9 @@
 import { UserRole } from "../../constants/user.constants";
 import mongoose, { Document } from "mongoose";
 import { z } from "zod";
-import { registerUserSchema } from "./user.validater";
+import { changePasswordSchema, registerUserSchema } from "./user.validater";
+
+
 /* =========================
    USER TYPES
 ========================= */
@@ -28,6 +30,7 @@ export interface IUser {
     address: IAddress;
 }
 
+type UpdateUser = Partial<IUser> 
 /* =========================
    USER DOCUMENT (MONGOOSE)
 ========================= */
@@ -75,3 +78,11 @@ export type IRefreshTokenDocument = IRefreshToken & Document;
 
 export type RegUser = z.infer<typeof registerUserSchema>;
 
+
+export interface ChangePasswordTO {
+    user_id: string;
+    oldPassword: string,
+    newPassword: string
+}
+
+export type ChangePass = z.infer< typeof changePasswordSchema>

@@ -1,8 +1,9 @@
 import { RegUser } from "./user.interface";
 import { AsyncHandler } from "../../utils/asyncHandler";
-import { registerUserService, getCurrentUserService } from "./user.service";
+import { registerUserService, getCurrentUserService, changePasswordService } from "./user.service";
 import { NextFunction, Request, Response } from "express";
 import { AuthRequest } from "../../types/auth.types"; 
+import { ChangePasswordTO } from "./user.interface";
 
 const register = AsyncHandler(async (req: Request<{}, {}, RegUser>, res: Response) => {
 
@@ -10,7 +11,7 @@ const register = AsyncHandler(async (req: Request<{}, {}, RegUser>, res: Respons
 
     const data = await registerUserService(payload);
 
-    res.status(201).json({
+    res.status( 201 ).json({
         success: true,
         message: "User registered successfully",
         data
@@ -23,7 +24,7 @@ const currentUser = AsyncHandler(async (req: Request, res: Response, next: NextF
 
     const data = await getCurrentUserService( payload! );
 
-    return res.status(200).json({
+    return res.status( 200 ).json({
         success: true,
         message: "User fetched successfully",
         data
@@ -31,4 +32,24 @@ const currentUser = AsyncHandler(async (req: Request, res: Response, next: NextF
 
 });
 
-export { register, currentUser }
+const changePassword = AsyncHandler( async ( req: Request, res: Response, next: NextFunction ) => {
+
+    const { oldPassword, newPassword } = req.body;
+
+    const { user_id } = ( req as AuthRequest ).user;
+
+    const payload: ChangePasswordTO = {
+        oldPassword,
+        newPassword,
+        user_id
+    }
+
+    await changePasswordService( payload );
+
+    return res.status( 200 ).json ({
+        success: true,
+        message: "Password is updated successfully"
+    })
+});
+
+export { register, currentUser, changePassword }

@@ -5,7 +5,7 @@ import { loginScheama } from "./auth.validater";
 
 const authRouter = Router();
 
-authRouter.route('/login').post(schemaValidation(loginScheama), login);
+authRouter.route( "/login" ).post( schemaValidation( loginScheama ), login);
 
 
 export { authRouter};

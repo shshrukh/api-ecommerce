@@ -1,7 +1,8 @@
 import { User } from "../../models/user.model";
-import { RegisterUser} from "./user.interface";
+import { ChangePasswordTO, RegisterUser} from "./user.interface";
 import { reqUser } from "../../types/auth.types";
 import { ApiError } from "../../utils/ApiError";
+
 
 const registerUserService = async (payload: RegisterUser) => {
     const { name, email, password, address, contactNumber } = payload;
@@ -38,4 +39,27 @@ const getCurrentUserService = async (payload: reqUser) => {
 
 }
 
-export { registerUserService, getCurrentUserService }
+const changePasswordService = async ( payload: ChangePasswordTO ): Promise< void > => {
+
+    const { user_id, newPassword, oldPassword } = payload;
+
+    const user = await User.findById( user_id ).select( "password");
+
+    if( !user ){
+        throw new ApiError( 404,"User not found");
+    }
+
+    const isPasswordCorrect = await user.comparePassword( oldPassword );
+    
+    if( !isPasswordCorrect ){
+        throw new ApiError ( 401, "Old password is incorrect");
+    }
+
+    user.password = newPassword;
+
+    await user.save();
+
+
+};
+
+export { registerUserService, getCurrentUserService , changePasswordService}
