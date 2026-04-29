@@ -17,5 +17,12 @@ export const registerUserSchema = z.object({
     address: addressSchema
 });
 
+export const changePasswordSchema = z.object({
+  oldPassword: z.string().min(6, "Old password must be at least 6 characters"),
+  newPassword: z.string().min(6, "New password must be at least 6 characters"),
+}).refine((data) => data.oldPassword !== data.newPassword, {
+  message: "New password must be different from old password",
+  path: ["newPassword"],
+});
 
 
